@@ -3,11 +3,15 @@ class Environment:
   goal_y = 4
   grid_size = 5
   walls = [(1,1), (1,2), (2,2)]
-  def __init__(self, x, y):
-    self.x = x
-    self.y = y
+  def __init__(self):
+    self.x = 0
+    self.y = 0
     self.step_count = 0
-  def update(self, action):
+  def reset(self):
+    self.x = 0
+    self.y = 0
+    self.step_count = 0
+  def step(self, action):
     new_x = self.x
     new_y = self.y
     if(action == 0):
@@ -23,7 +27,7 @@ class Environment:
       self.x = new_x
       self.y = new_y
     if(self.x == self.goal_x and self.y == self.goal_y):
-      return((self.x, self.y), 0, True)
+      return((self.x, self.y), 10, True)
     if(self.step_count == 30):
       return((self.x, self.y), -1, True)
     else:
