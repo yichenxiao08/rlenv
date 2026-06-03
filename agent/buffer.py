@@ -10,3 +10,5 @@ class Buffer:
   def select_random(self):
     r = random.sample(self.memory, min(len(self.memory), 32))
     return r
+  def __len__(self):
+    return len(self.memory)

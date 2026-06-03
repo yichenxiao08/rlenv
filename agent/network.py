@@ -12,6 +12,4 @@ class Network(nn.Module):
     x = torch.relu(self.hidden_2(x))
     x = self.output(x)
     return x
-  
-model = Network()
 

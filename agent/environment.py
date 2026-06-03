@@ -11,6 +11,7 @@ class Environment:
     self.x = 0
     self.y = 0
     self.step_count = 0
+    return((self.x, self.y))
   def step(self, action):
     new_x = self.x
     new_y = self.y
