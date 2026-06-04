@@ -2,8 +2,7 @@ import random
 import torch
 from torch import nn
 from torch import optim
-import numpy as np
-from network import Network
+from agent.network import Network
 
 class Agent:
   def __init__(self):
