@@ -1,3 +1,5 @@
+# import pygame
+
 class Environment:
   goal_x = 4
   goal_y = 4
@@ -7,18 +9,25 @@ class Environment:
     self.x = 0
     self.y = 0
     self.step_count = 0
+    # pygame.init()
+    # self.screen = pygame.display.set_mode((self.grid_size*100, self.grid_size*100))
   def reset(self):
     self.x = 0
     self.y = 0
     self.step_count = 0
     return((self.x, self.y))
+  # def render(self):
+  #   self.screen.fill("white")
   def step(self, action):
+    good_move = False
     new_x = self.x
     new_y = self.y
     if(action == 0):
       new_y += 1
+      good_move = True
     elif(action == 1):
       new_x += 1
+      good_move = True
     elif(action == 2):
       new_y -= 1
     elif(action == 3):
@@ -32,7 +41,4 @@ class Environment:
     if(self.step_count == 30):
       return((self.x, self.y), -1, True)
     else:
-      return((self.x, self.y), -1, False)
-    
-  
-  
+      return((self.x, self.y), -1 + 0.25 * good_move, False)

@@ -17,6 +17,7 @@ def train_loop(env, dgn, buffer, epsilon):
       dgn.sync_networks()
       N = 0
     state = state_prime
-    epsilon = max(0.01, epsilon * 0.999)
+    if len(buffer) >= 100:
+      epsilon = max(0.01, epsilon * 0.999)
   return epsilon, total_reward
   
