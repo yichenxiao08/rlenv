@@ -5,17 +5,17 @@ from torch import optim
 from agent.network import Network
 
 class Agent:
-  def __init__(self):
-    self.training_network = Network()
-    self.frozen_network = Network()
+  def __init__(self, state_size, action_size):
+    self.training_network = Network(state_size, action_size)
+    self.frozen_network = Network(state_size, action_size)
     self.loss = nn.MSELoss()
     self.optimizer = optim.Adam(self.training_network.parameters(), lr=0.001)
     self.frozen_network.load_state_dict(self.training_network.state_dict())
   
-  def select_action(self, epsilon, state):
+  def select_action(self, epsilon, state, action_size):
     r = random.random()
     if(r < epsilon):
-      action = random.randint(0,3)
+      action = random.randint(0, action_size - 1)
       return action
     else:
       state_tensor = torch.tensor(state, dtype=torch.float32)

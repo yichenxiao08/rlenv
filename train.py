@@ -1,11 +1,11 @@
-def train_loop(env, dgn, buffer, epsilon):
+def train_loop(env, dgn, buffer, epsilon, action_size):
   env.reset()
   state = env.reset()
   done = False
   N = 0
   total_reward = 0
   while not done:
-    action = dgn.select_action(epsilon, state)
+    action = dgn.select_action(epsilon, state, action_size)
     state_prime, reward, done = env.step(action)
     buffer.add_entry(state, action, reward, state_prime, done)
     total_reward += reward
