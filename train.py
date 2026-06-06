@@ -1,4 +1,4 @@
-def train_loop(env, dgn, buffer, epsilon, action_size):
+def train_loop(env, dgn, buffer, epsilon, action_size, epsilon_decay):
   env.reset()
   state = env.reset()
   done = False
@@ -18,6 +18,6 @@ def train_loop(env, dgn, buffer, epsilon, action_size):
       N = 0
     state = state_prime
     if len(buffer) >= 100:
-      epsilon = max(0.01, epsilon * 0.999)
+      epsilon = max(0.01, epsilon * epsilon_decay)
   return epsilon, total_reward
   
