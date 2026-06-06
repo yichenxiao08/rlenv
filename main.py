@@ -1,7 +1,7 @@
 from train import train_loop
 from agent.buffer import Buffer as buffer
-from environments.gridworld import Environment as gridworld
-from environments.snake import Environment as snake
+from modules.gridworld.environment import Environment as gridworld
+from modules.snake.environment import Environment as snake
 from agent.dgn import Agent as dgn
 
 state_size = 11
