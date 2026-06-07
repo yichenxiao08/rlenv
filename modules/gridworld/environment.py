@@ -1,3 +1,4 @@
+# import pygame
 
 class Environment:
   goal_x = 4
@@ -8,11 +9,15 @@ class Environment:
     self.x = 0
     self.y = 0
     self.step_count = 0
+    # pygame.init()
+    # self.screen = pygame.display.set_mode((self.grid_size*100, self.grid_size*100))
   def reset(self):
     self.x = 0
     self.y = 0
     self.step_count = 0
     return((self.x, self.y))
+  # def render(self):
+  #   self.screen.fill("white")
   def step(self, action):
     good_move = False
     new_x = self.x
