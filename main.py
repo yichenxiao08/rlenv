@@ -31,8 +31,6 @@ def main():
     playback_queue = deque()
     telemetry = recorder(playback_queue, renderer_ready, mutex)
     
-    
-    
     training_thread = threading.Thread(target=training, args=(environment, agent, replay_buffer, telemetry), daemon=True)
     training_thread.start()
     

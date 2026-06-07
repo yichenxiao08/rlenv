@@ -1,6 +1,5 @@
 
 def train_loop(env, dgn, buffer, epsilon, action_size, epsilon_decay, recorder=None):
-  env.reset()
   state = env.reset()
   done = False
   N = 0
