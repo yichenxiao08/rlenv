@@ -1,14 +1,24 @@
-def train_loop(env, dgn, buffer, epsilon, action_size, epsilon_decay):
+
+def train_loop(env, dgn, buffer, epsilon, action_size, epsilon_decay, recorder=None):
   env.reset()
   state = env.reset()
   done = False
   N = 0
   total_reward = 0
+  
+  VISUALIZE = recorder is not None
+  
+  if VISUALIZE:
+    recorder.check_status()
+  
   while not done:
+    if VISUALIZE:
+      recorder.capture(env)     
     action = dgn.select_action(epsilon, state, action_size)
     state_prime, reward, done = env.step(action)
     buffer.add_entry(state, action, reward, state_prime, done)
     total_reward += reward
+    
     if(len(buffer) > 32):
       batch = buffer.select_random()
       dgn.train(batch, 0.9)
@@ -19,5 +29,7 @@ def train_loop(env, dgn, buffer, epsilon, action_size, epsilon_decay):
     state = state_prime
     if len(buffer) >= 100:
       epsilon = max(0.01, epsilon * epsilon_decay)
+  if VISUALIZE:
+    recorder.dispatch()
   return epsilon, total_reward
   
