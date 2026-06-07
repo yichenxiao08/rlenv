@@ -20,7 +20,7 @@ def main():
   
   action_size = 3
   environment = snake()
-  agent = dgn(11, action_size)
+  agent = dgn(12, action_size)
   replay_buffer = Buffer()
 
   if VISUALIZE:
@@ -49,10 +49,10 @@ def main():
         time.sleep(0.01)
   else:
     print("Visualization disabled. Training running at maximum hardware capacity...")
-    epsilon = 0.9999
+    epsilon = 0.99999
     
     for episode in range(5000): 
-      epsilon, total_reward = train_loop(environment, agent, replay_buffer, epsilon, action_size, 0.9999, recorder=None)
+      epsilon, total_reward = train_loop(environment, agent, replay_buffer, epsilon, action_size, 0.99995, recorder=None)
       print(f"Episode {episode} done, epsilon: {epsilon:.3f}, reward: {total_reward:.3f}")
 
 if __name__ == "__main__":

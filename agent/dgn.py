@@ -34,12 +34,15 @@ class Agent:
     dones = torch.tensor(dones, dtype=torch.float32)
     
     with torch.no_grad():
-      q_primes = self.frozen_network(state_primes).max(dim=1).values
+      best_actions = self.training_network(state_primes).argmax(dim=1, keepdim=True)
+      q_values = self.frozen_network(state_primes)
+      q_primes = q_values.gather(1, best_actions).squeeze(1)
+      
       
     target = rewards + gamma * q_primes * (1 - dones)
     predictions = self.training_network(states)
     actions = actions.unsqueeze(1)
-    predictions = torch.gather(predictions, 1, actions).squeeze(1)
+    predictions = predictions.gather(1, actions).squeeze(1)
     output = self.loss(predictions, target)
     
     self.optimizer.zero_grad()
