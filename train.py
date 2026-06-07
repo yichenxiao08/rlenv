@@ -1,9 +1,9 @@
 
-def train_loop(env, dgn, buffer, epsilon, action_size, epsilon_decay, recorder=None):
+def train_loop(env, dqn, buffer, epsilon, action_size, N, recorder=None):
   state = env.reset()
   done = False
-  N = 0
   total_reward = 0
+  total_apples = 0
   
   VISUALIZE = recorder is not None
   
@@ -13,22 +13,21 @@ def train_loop(env, dgn, buffer, epsilon, action_size, epsilon_decay, recorder=N
   while not done:
     if VISUALIZE:
       recorder.capture(env)     
-    action = dgn.select_action(epsilon, state, action_size)
-    state_prime, reward, done = env.step(action)
+    action = dqn.select_action(epsilon, state, action_size)
+    state_prime, reward, done, apples = env.step(action)
+    total_apples += apples
     buffer.add_entry(state, action, reward, state_prime, done)
     total_reward += reward
     
     if(len(buffer) > 32):
       batch = buffer.select_random()
-      dgn.train(batch, 0.9)
+      dqn.train(batch, 0.99)
     N += 1
-    if(N == 1000):
-      dgn.sync_networks()
+    if(N >= 1000):
+      dqn.sync_networks()
       N = 0
     state = state_prime
-    if len(buffer) >= 100:
-      epsilon = max(0.01, epsilon * epsilon_decay)
   if VISUALIZE:
     recorder.dispatch()
-  return epsilon, total_reward
+  return N, epsilon, total_reward, total_apples
   

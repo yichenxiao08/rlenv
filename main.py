@@ -3,24 +3,28 @@ from agent.buffer import Buffer
 from modules.snake.environment import Environment as snake
 from modules.snake.telemetry import TelemetryRecorder as recorder
 from modules.snake.renderer import Renderer
-from agent.dgn import Agent as dgn
+from agent.dqn import Agent as dqn
 from collections import deque
 import threading, time
 
 def training(environment, agent, replay_buffer, telemetry):
   action_size = 3
   epsilon = 0.9999
-  
+  max_apples = 0
+  N = 0
   for episode in range(5000):
-    epsilon, total_reward = train_loop(environment, agent, replay_buffer, epsilon, action_size, 0.9999, telemetry)
+    N, epsilon, total_reward, total_apples = train_loop(environment, agent, replay_buffer, epsilon, action_size, N, telemetry)
+    epsilon = max(0.995 * epsilon, 0.01)
+    max_apples = max(max_apples, total_apples)
     print(f"Episode {episode} done, epsilon: {epsilon:.3f}, reward: {total_reward:.3f}")
+  print(f"Max apples: {max_apples:.3f}")
 
 def main():
   VISUALIZE = True
   
   action_size = 3
   environment = snake()
-  agent = dgn(11, action_size)
+  agent = dqn(11, action_size)
   replay_buffer = Buffer()
 
   if VISUALIZE:
@@ -50,7 +54,9 @@ def main():
     epsilon = 0.9999
     
     for episode in range(5000): 
-      epsilon, total_reward = train_loop(environment, agent, replay_buffer, epsilon, action_size, 0.9999, recorder=None)
+      N = 0
+      epsilon, total_reward = train_loop(environment, agent, replay_buffer, epsilon, action_size, N, recorder=None)
+      epsilon *= 0.99
       print(f"Episode {episode} done, epsilon: {epsilon:.3f}, reward: {total_reward:.3f}")
 
 if __name__ == "__main__":

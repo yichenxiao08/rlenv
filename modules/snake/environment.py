@@ -70,19 +70,19 @@ class Environment:
         
     if(hit_body or not 0 <= next_head[0] <= 16 or not 0 <= next_head[1] <= 16):
       state = self.get_state()
-      return(state, -100, True)
+      return(state, -100, True, 0)
     self.head = next_head
     self.snake_coordinates.appendleft(self.head)
     if(self.head == self.apple):
       self.apple = self.generate_apple()
       state = self.get_state()
-      return(state, 10, False)
+      return(state, 10, False, 1)
     else:
       self.snake_coordinates.pop()
       state = self.get_state()
       if(self.direction == 0 and self.apple_north or self.direction == 1 and self.apple_east or self.direction == 2 and self.apple_south or self.direction == 3 and self.apple_west):
-        return(state, 1, False)
-      return(state, -1, False)
+        return(state, 1, False, 0)
+      return(state, -1, False, 0)
   def get_state(self):
     dir_left = (self.direction - 1) % 4
     dir_right = (self.direction + 1) % 4

@@ -18,7 +18,7 @@ class Agent:
       action = random.randint(0, action_size - 1)
       return action
     else:
-      state_tensor = torch.tensor(state, dtype=torch.float32)
+      state_tensor = torch.tensor(state, dtype=torch.float32).unsqueeze(0)
       output = self.training_network(state_tensor)
       return torch.argmax(output).item()
   
