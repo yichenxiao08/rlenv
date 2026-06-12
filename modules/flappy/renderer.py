@@ -16,10 +16,10 @@ class Renderer:
         sys.exit()
     
     self.screen.fill((135, 206, 235))
-    x, y = env.x, env.y
-    obstacles = env.obstacles
-    obstacle_width = env.obstacle_width
-    obstacle_gap = env.obstacle_gap
+    x, y = env["bird"]
+    obstacles = env["obstacles"]
+    obstacle_width = env["obstacle_width"]
+    obstacle_gap = env["obstacle_gap"]
     
     rect = pygame.Rect(x - 8, self.height - y - 8, 16, 16)
     pygame.draw.rect(self.screen, (255, 255, 0), rect)
