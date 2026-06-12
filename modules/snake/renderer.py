@@ -8,7 +8,7 @@ class Renderer:
     self.cell_size = cell_size
     self.window_size = self.grid_size * self.cell_size
     self.screen = pygame.display.set_mode((self.window_size, self.window_size))
-    pygame.display.set_caption("Modular RL Environment")
+    pygame.display.set_caption("Modular RL Environment - Snake")
     self.clock = pygame.time.Clock()
     
   def render_frame(self, env, speed = 15):
@@ -38,7 +38,7 @@ class Renderer:
 
     pygame.display.flip()
     self.clock.tick(speed)
-  def close(self):
+  def close():
     pygame.quit()
     
     
