@@ -17,9 +17,10 @@ class TelemetryRecorder:
 
     snapshot = {
       "bird": tuple((env.x, env.y)),
-      "obstacles": list(env.obstacles),
+      "obstacles": [tuple(obs) for obs in env.obstacles],
       "obstacle_width": int(env.obstacle_width),
-      "obstacle_gap": int(env.obstacle_gap)
+      "obstacle_gap": int(env.gap_size),
+      "bird_size": int(env.bird_size)
     }
     self.current_episode.append(snapshot)
     
