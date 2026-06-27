@@ -24,7 +24,7 @@ def train_loop(env, dqn, buffer, epsilon, action_size, N, recorder=None):
       buffer.step_beta()
       
     N += 1
-    if(N >= 1000):
+    if(N >= 5000):
       dqn.sync_networks()
       N = 0
     state = state_prime

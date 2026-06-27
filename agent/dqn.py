@@ -8,12 +8,18 @@ class Agent:
   def __init__(self, state_size, action_size):
     self.training_network = Network(state_size, action_size)
     self.frozen_network = Network(state_size, action_size)
-    self.loss = nn.MSELoss(reduction="none")
-    self.optimizer = optim.Adam(self.training_network.parameters(), lr=0.001)
+    self.loss = nn.SmoothL1Loss(reduction="none")
+    self.optimizer = optim.Adam(self.training_network.parameters(), lr=0.0001)
     self.frozen_network.load_state_dict(self.training_network.state_dict())
+    self.steps = 0
   
   def select_action(self, epsilon, state, action_size):
+    self.steps += 1
     r = random.random()
+    if self.steps % 1000 == 0:
+      state_tensor = torch.tensor(state, dtype=torch.float32).unsqueeze(0)
+      output = self.training_network(state_tensor)
+      print(f"state: {state}, Q-values: {output}")
     if(r < epsilon):
       action = random.randint(0, action_size - 1)
       return action
@@ -21,6 +27,7 @@ class Agent:
       state_tensor = torch.tensor(state, dtype=torch.float32).unsqueeze(0)
       output = self.training_network(state_tensor)
       return torch.argmax(output).item()
+    
   
   def sync_networks(self):
     self.frozen_network.load_state_dict(self.training_network.state_dict())
@@ -49,6 +56,8 @@ class Agent:
     self.optimizer.zero_grad()
     output.backward()
     self.optimizer.step()
+    
+    # print(f"loss: {output.item():.4f}")
     
     return td_errors
 
