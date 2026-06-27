@@ -18,15 +18,18 @@ def train_loop(env, dqn, buffer, epsilon, action_size, N, recorder=None):
     total_reward += reward
     
     if(len(buffer) > 32):
-      batch = buffer.select_random()
-      dqn.train(batch, 0.99)
+      indices, batch, weights = buffer.select_random(32)
+      td_errors = dqn.train(batch, weights, 0.99)
+      buffer.update_priorities(indices, td_errors.detach().numpy())
+      buffer.step_beta()
+      
     N += 1
     if(N >= 1000):
       dqn.sync_networks()
       N = 0
     state = state_prime
-  recorder.capture(env)
   if VISUALIZE:
+    recorder.capture(env)
     recorder.dispatch()
   return N, epsilon, total_reward
   

@@ -22,10 +22,11 @@ def training(environment, agent, replay_buffer, telemetry):
 def main():
   VISUALIZE = True
   
+  state_size = 4
   action_size = 3
   environment = flappy()
-  agent = dqn(4, action_size)
-  replay_buffer = Buffer()
+  agent = dqn(state_size, action_size)
+  replay_buffer = Buffer(alpha=0.6, beta=0.4, beta_increment=0.001, epsilon=1e-5)
 
   if VISUALIZE:
     renderer_ready = {"ready": True}
