@@ -28,8 +28,9 @@ def train_loop(env, dqn, buffer, epsilon, action_size, N, recorder=None):
       dqn.sync_networks()
       N = 0
     state = state_prime
+  score = env.score
   if VISUALIZE:
     recorder.capture(env)
     recorder.dispatch()
-  return N, epsilon, total_reward
+  return N, epsilon, total_reward, score
   

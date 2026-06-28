@@ -13,12 +13,14 @@ import threading, time
 def training(environment, agent, replay_buffer, telemetry):
   action_size = 2
   epsilon = 0.9999
+  max_score = 0
   N = 0
   for episode in range(12000):
-    N, epsilon, total_reward = train_loop(environment, agent, replay_buffer, epsilon, action_size, N, telemetry)
-    epsilon = max(0.9995 * epsilon, 0.01)
-    print(f"Episode {episode} done, epsilon: {epsilon:.3f}, reward: {total_reward:.3f}")
-
+    N, epsilon, total_reward, score = train_loop(environment, agent, replay_buffer, epsilon, action_size, N, telemetry)
+    epsilon = max(0.999 * epsilon, 0.01)
+    max_score = max(max_score, score)
+    print(f"Episode {episode} done, epsilon: {epsilon:.3f}, reward: {total_reward:.3f}, score: {score}, max: {max_score}")
+  print(f"Max score: {max_score}")
 def main():
   VISUALIZE = True
   

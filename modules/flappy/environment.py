@@ -4,7 +4,7 @@ class Environment:
   grid_height = 600
   accel = -400
   jump_velocity = 80
-  obstacle_velocity = -150
+  obstacle_velocity = -100
   obstacle_width = 50
   gap_size = 150
   bird_size = 20
@@ -14,8 +14,10 @@ class Environment:
     self.x = 50
     self.y = 300
     self.obstacles = []
+    self.score = 0
   def reset(self):
     self.velocity = 0
+    self.score = 0
     self.y = 300
     self.obstacles = [] 
     self.generate_obstacle(1000)
@@ -70,24 +72,25 @@ class Environment:
       if obstacle[0] + self.obstacle_width < bird_left and not obstacle[2]:
         obstacle[2] = True
         bonus = 1
+        self.score += 1
     if bird_bottom <= 0:
       state, _ = self.get_state()
       return(state, -1.0, True)
     state, distance = self.get_state()
     distance = 1 - min(distance, 1.0)
-    return (state, 0.1 + bonus + distance * 0.1, False)
+    return (state, 0.01 + bonus + distance * 0.1, False)
   def get_state(self):
     next_obstacle_x = float(self.grid_width)
     next_obstacle_height = float(self.grid_height / 2)
     
-    for obstacle in self.obstacles:
-      if obstacle[0] + self.obstacle_width > self.x:
-        next_obstacle_x = obstacle[0]
-        next_obstacle_height = obstacle[1]
-        break
+    candidates = [o for o in self.obstacles if o[0] + self.obstacle_width > self.x]
+    if candidates:
+      next_obstacle = min(candidates, key=lambda o: o[0])
+      next_obstacle_x = next_obstacle[0]
+      next_obstacle_height = next_obstacle[1]
     normalized_y = self.y / self.grid_height
     normalized_velocity = (self.velocity + 500) / 1000
-    normalized_obstacle_x = max(next_obstacle_x - self.x, 0.0) / float(self.grid_width - self.x)
+    normalized_obstacle_x = min(max(next_obstacle_x - self.x, 0.0) / float(self.grid_width - self.x), 1.0)
     normalized_obstacle_y = (next_obstacle_height + self.gap_size / 2) / self.grid_height
     
     return (normalized_y, normalized_velocity, normalized_obstacle_x, normalized_obstacle_y), abs(normalized_obstacle_y - normalized_y)
