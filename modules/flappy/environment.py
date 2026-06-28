@@ -1,4 +1,8 @@
 import random as random
+
+# Average score across 1000 trained episodes (epsilon < 0.05): 17.7
+# High score: 166
+
 class Environment:
   grid_width = 600
   grid_height = 600

@@ -1,5 +1,9 @@
 import random as random
 from collections import deque
+
+# Average score across 2500 trained episodes (epsilon < 0.05): 20.0
+# High score: 66
+
 class Environment:
   grid_size = 17
   dir_vectors = [(0, 1), (1, 0), (0, -1), (-1, 0)]
@@ -15,9 +19,10 @@ class Environment:
     self.danger_forward = False
     self.danger_left = False
     self.danger_right = False
-    
+
+    self.score = 0
     self.snake_coordinates = deque([self.head, (self.head[0] - 1, self.head[1]), (self.head[0] - 2, self.head[1])])
-    self.apple = self.generate_apple()     
+    self.apple = self.generate_apple()
 
     distance_x = self.apple[0] - self.head[0]
     distance_y = self.apple[1] - self.head[1]
@@ -43,11 +48,12 @@ class Environment:
     self.danger_forward = False
     self.danger_left = False
     self.danger_right = False
-    
+
+    self.score = 0
     self.apple = self.generate_apple()
-    
+
     self.snake_coordinates = deque([self.head, (self.head[0] - 1, self.head[1]), (self.head[0] - 2, self.head[1])])
-    
+
     return self.get_state()
   
   def step(self, action):
@@ -70,19 +76,20 @@ class Environment:
         
     if(hit_body or not 0 <= next_head[0] <= 16 or not 0 <= next_head[1] <= 16):
       state = self.get_state()
-      return(state, -100, True, 0)
+      return(state, -100, True)
     self.head = next_head
     self.snake_coordinates.appendleft(self.head)
     if(self.head == self.apple):
+      self.score += 1
       self.apple = self.generate_apple()
       state = self.get_state()
-      return(state, 10, False, 1)
+      return(state, 10, False)
     else:
       self.snake_coordinates.pop()
       state = self.get_state()
       if(self.direction == 0 and self.apple_north or self.direction == 1 and self.apple_east or self.direction == 2 and self.apple_south or self.direction == 3 and self.apple_west):
-        return(state, 1, False, 0)
-      return(state, -1, False, 0)
+        return(state, 1, False)
+      return(state, -1, False)
   def get_state(self):
     dir_left = (self.direction - 1) % 4
     dir_right = (self.direction + 1) % 4
