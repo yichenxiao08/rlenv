@@ -2,7 +2,7 @@ import random
 import torch
 from torch import nn
 from torch import optim
-from agent.network import Network
+from value.agent.network import Network
 
 class Agent:
   def __init__(self, state_size, action_size):
@@ -56,9 +56,7 @@ class Agent:
     self.optimizer.zero_grad()
     output.backward()
     self.optimizer.step()
-    
-    # print(f"loss: {output.item():.4f}")
-    
+        
     return td_errors
 
     
